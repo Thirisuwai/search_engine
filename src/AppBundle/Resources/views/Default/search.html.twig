@@ -1,0 +1,57 @@
+<style>
+    #form_submit {
+        margin-left: 51em;
+    }
+
+    #form_keyword {
+        height: 39px;
+        width: 525px;
+    }
+
+    #form_submit {
+        height: 4em;
+        margin-left: 51em;
+        margin-top: 1em;
+        width: 13em;
+    }
+</style>
+
+<script src="{{ asset('bundles/app/js/jquery/dist/jquery.min.js') }}"></script>
+
+<script>
+    jQuery(document).ready(function () {
+        $('.trigger_view').click(function(e) {
+            var id = $(this).data('page');
+            $.ajax({
+                type: "POST",
+                url: '{{ path('update_view') }}',
+                data: {'id' : id }
+            });
+            return true;
+        });
+
+    });
+
+</script>
+
+<div class="container">
+
+<div style="margin-top: 1px; margin-left: 10em; font-size: 1em">
+    <img src="{{ asset('bundles/app/images/index.jpg') }}" style="margin-right: 17em;"/>
+    {{ form(form) }}
+        {% if pages is not empty %}
+            <h4>Total {{ pages|length }} results</h4>
+            {% for p in pages %}
+                <div>
+                    <h4><a class="trigger_view" data-page="{{ p.id }}" href="{{ p.url }}">{{ p.title|raw }}</a>&nbsp;&nbsp;[{{ p.viewCount }} view(s)]</h4>
+                    <p>{{ p.url }}</p>
+                    <span>{{ p.paragraph }}{{ p.title|raw }}</span>
+                    <br />
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% if form.vars.submitted and pages is empty %}
+        <p>Your search does not match any documents. Please make sure all words are spelled correctly</p>
+    {% endif %}
+</div>
+</div>
